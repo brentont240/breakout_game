@@ -42,17 +42,21 @@ export class BrickField {
 
     collisionDetection(ball) {
         for (let c = 0; c < this.columnCount; c++) {
-            for (let r = 0; r < this.rowCount; r++) {
-                const brick = this.bricks[c][r];
-                if (ball.x > brick.x && 
-                    ball.x < brick.x + brick.width && 
-                    ball.y > brick.y && 
-                    ball.y < brick.y + brick.height
-                    ) {
-                    ball.dy = -ball.dy;
-                    brick.status = 0;
-                }
+          for (let r = 0; r < this.rowCount; r++) {
+            const brick = this.bricks[c][r];
+            // Only have colision for bricks that have status of 1
+            if (brick.status === 1) {
+              if (
+                ball.x > brick.x &&
+                ball.x < brick.x + brick.width &&
+                ball.y > brick.y &&
+                ball.y < brick.y + brick.height
+              ) {
+                ball.dy = -ball.dy;
+                brick.status = 0;
+              }
             }
           }
+        }
     }
 }
