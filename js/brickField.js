@@ -1,3 +1,4 @@
+import { Brick } from "./brick.js";
 export class BrickField {
     constructor(padding, rowCount, columnCount, offsetTop, offsetLeft) {
         this.padding = padding;
@@ -9,29 +10,49 @@ export class BrickField {
     }
 
     // loads the bricks into the bricks array
-    init() {
+    init(brick) {
         for (let c = 0; c < this.columnCount; c++) {
           this.bricks[c] = [];
           for (let r = 0; r < this.rowCount; r++) {
-            this.bricks[c][r] = { x: 0, y: 0 };
+            // Todo: see if there is a way to import an array to have bricks of different colors, etc.
+            this.bricks[c][r] = new Brick(brick.x, brick.y, brick.status, brick.width, brick.height, brick.color);
           }
         }
     }
 
-    draw(brick, ctx) {
+    draw(ctx) {
         for (let c = 0; c < this.columnCount; c++) {
             for (let r = 0; r < this.rowCount; r++) {
-                const brickX = c * (brick.width + this.padding) + this.offsetLeft;
-                const brickY = r * (brick.height + this.padding) + this.offsetTop;
-                this.bricks[c][r].x = brickX;
-                this.bricks[c][r].y = brickY;
-                ctx.beginPath();
-                ctx.rect(brickX, brickY, brick.width, brick.height);
-                ctx.fillStyle = brick.color;
-                ctx.fill();
-                ctx.closePath();
+                const brick = this.bricks[c][r];
+                // Only draw the bricks if their status is 1
+                if (brick.status === 1) {
+                    const brickX = c * (brick.width + this.padding) + this.offsetLeft;
+                    const brickY = r * (brick.height + this.padding) + this.offsetTop;
+                    brick.x = brickX;
+                    brick.y = brickY;
+                    ctx.beginPath();
+                    ctx.rect(brickX, brickY, brick.width, brick.height);
+                    ctx.fillStyle = brick.color;
+                    ctx.fill();
+                    ctx.closePath();
+                }
             } 
         }
     }
 
+    collisionDetection(ball) {
+        for (let c = 0; c < this.columnCount; c++) {
+            for (let r = 0; r < this.rowCount; r++) {
+                const brick = this.bricks[c][r];
+                if (ball.x > brick.x && 
+                    ball.x < brick.x + brick.width && 
+                    ball.y > brick.y && 
+                    ball.y < brick.y + brick.height
+                    ) {
+                    ball.dy = -ball.dy;
+                    brick.status = 0;
+                }
+            }
+          }
+    }
 }

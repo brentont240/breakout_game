@@ -8,10 +8,10 @@ const ctx = canvas.getContext("2d");
 
 const ball = new Ball((canvas.width / 2), (canvas.height - 30), 10, 0, (Math.PI * 2), "blue", 2, 2);
 const paddle = new Paddle(canvas, 75, 10, "red", 7)
-const brick = new Brick(75, 20, "green");
+const brick = new Brick(0, 0, 1, 75, 20, "green");
 const brickField = new BrickField(10, 3, 5, 30, 30);
 
-brickField.init();
+brickField.init(brick);
 
 const interval = setInterval(draw, 10);
 
@@ -20,7 +20,7 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // draw the brick field at the top
-    brickField.draw(brick, ctx);
+    brickField.draw(ctx);
 
     // update movement for the ball and paddle
     ball.draw(ctx);
@@ -28,6 +28,8 @@ function draw() {
 
     paddle.draw(ctx);
     paddle.move(canvas);
+
+    brickField.collisionDetection(ball);
 }
 
 // need to add bind or it will not work
