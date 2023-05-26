@@ -19,7 +19,7 @@ export class Ball {
         ctx.closePath;
     }
 
-    move(canvas, interval, paddle) {
+    move(canvas, paddle, player) {
         // update the ball's coordinates for the next frame
         // bounce the ball if it touches the edges
         if (this.x + this.dx < this.radius || this.x + this.dx > canvas.width - this.radius) {
@@ -33,9 +33,18 @@ export class Ball {
                 this.dy = -this.dy;
             } else {
                 // game over if the ball goes to the bottom and reset the game
-                alert("Game Over");
-                document.location.reload();
-                clearInterval(interval); // Needed for Chrome to end game
+                player.lives--;
+                if (player.lives === 0) {
+                    alert("Game Over");
+                    document.location.reload();
+                } else {
+                    // reset the paddle and ball if the game isn't over
+                    this.x = canvas.width / 2;
+                    this.y = canvas.height - 30;
+                    this.dx = 2;
+                    this.dy = -2;
+                    paddle.x = (canvas.width - paddle.width) / 2;
+                }
             }
         }
         this.x += this.dx;

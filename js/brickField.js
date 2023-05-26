@@ -40,7 +40,7 @@ export class BrickField {
         }
     }
 
-    collisionDetection(ball) {
+    collisionDetection(ball, player) {
         for (let c = 0; c < this.columnCount; c++) {
           for (let r = 0; r < this.rowCount; r++) {
             const brick = this.bricks[c][r];
@@ -54,6 +54,12 @@ export class BrickField {
               ) {
                 ball.dy = -ball.dy;
                 brick.status = 0;
+                player.score++;
+                // if the score = the number of bricks, the player wins and the game reloads
+                if (player.score === this.rowCount * this.columnCount) {
+                    alert("You win!");
+                    document.location.reload();
+                }
               }
             }
           }
